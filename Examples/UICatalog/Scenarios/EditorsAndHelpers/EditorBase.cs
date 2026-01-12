@@ -71,14 +71,14 @@ public abstract class EditorBase : View
                 return;
             }
 
-            if (value is null && _viewToEdit is { })
+            if (value is null && _viewToEdit is not null)
             {
                 _viewToEdit.SubViewsLaidOut -= View_LayoutComplete;
             }
 
             _viewToEdit = value;
 
-            if (_viewToEdit is { })
+            if (_viewToEdit is not null)
             {
                 _viewToEdit.SubViewsLaidOut += View_LayoutComplete;
             }
@@ -127,20 +127,20 @@ public abstract class EditorBase : View
         ViewToEdit = App!.Navigation!.GetFocused ();
     }
 
-    private void ApplicationOnMouseEvent (object? sender, MouseEventArgs e)
+    private void ApplicationOnMouseEvent (object? sender, Mouse mouse)
     {
-        if (e.Flags != MouseFlags.Button1Clicked || !AutoSelectViewToEdit)
+        if (mouse.Flags != MouseFlags.LeftButtonClicked || !AutoSelectViewToEdit)
         {
             return;
         }
 
-        if ((AutoSelectSuperView is { } && !AutoSelectSuperView.FrameToScreen ().Contains (e.Position))
-            || FrameToScreen ().Contains (e.Position))
+        if ((AutoSelectSuperView is not null && !AutoSelectSuperView.FrameToScreen ().Contains (mouse.Position!.Value))
+            || FrameToScreen ().Contains (mouse.Position!.Value))
         {
             return;
         }
 
-        View? view = e.View;
+        View? view = mouse.View;
 
         if (view is null)
         {
